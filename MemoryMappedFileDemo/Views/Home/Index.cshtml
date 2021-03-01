@@ -1,0 +1,43 @@
+﻿@model MemoryMappedFileDemo.MemoryMappedUtils.FileStatus
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <hr />
+    <h4>File Status</h4>
+    <h5>Process ID: @ViewBag.ProcessID</h5>
+    <h5>Loaded From File : @ViewBag.LoadedFromFile</h5>
+
+    <ul>
+        <li>FirstFileChanged: @Model.FirstFileChanged</li>
+        <li>SecondFileChanged: @Model.SecondFileChanged</li>
+        <li>ThirdFileChanged: @Model.ThirdFileChanged</li>
+        <li>FourthFileChanged: @Model.FourthFileChanged</li>
+        <li>FifthFileChanged: @Model.FifthFileChanged</li>
+    </ul>
+
+    <hr />
+    <form action="" method="post">
+        <label asp-for="FirstFileChanged"></label>
+        <input type="text" name="FirstFileChanged" value="" />
+        <br />
+        <label asp-for="SecondFileChanged"></label>
+        <input type="text" name="SecondFileChanged" value="" />
+        <br />
+        <label asp-for="ThirdFileChanged"></label>
+        <input type="text" name="ThirdFileChanged" value="" />
+        <br />
+        <label asp-for="FourthFileChanged"></label>
+        <input type="text" name="FourthFileChanged" value="" />
+        <br />
+        <label asp-for="FifthFileChanged"></label>
+        <input type="text" name="FifthFileChanged" value="" />
+        <br />
+
+        <input type="submit" name="submitBTn" value="Update Data" class="btn btn-primary"/>
+    </form>
+</div>
