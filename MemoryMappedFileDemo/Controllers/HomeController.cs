@@ -25,13 +25,6 @@ namespace MemoryMappedFileDemo.Controllers
             _fileStatus = _memoryMap.ReadData();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-
-            _memoryMap?.Dispose();
-        }
-
         public IActionResult Index()
         {
             ViewBag.ProcessID = Process.GetCurrentProcess().Id;
