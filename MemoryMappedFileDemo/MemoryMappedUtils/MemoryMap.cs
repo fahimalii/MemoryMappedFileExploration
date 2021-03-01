@@ -18,7 +18,7 @@ namespace MemoryMappedFileDemo.MemoryMappedUtils
         public string MutexName { get; private set; }
         public bool LoadedFromFile = false;
 
-        public MemoryMap(string memoryMapName, string directoryPath)
+        public MemoryMap(string memoryMapName, string directoryPath, string fileName)
         {
             Validate(memoryMapName);
 
@@ -26,7 +26,7 @@ namespace MemoryMappedFileDemo.MemoryMappedUtils
             MutexName = $"{MemoryMapName}-Mutex"; // Note: This MUST BE Unique throughout the server, to avoid accidentally blocking some other resource
 
             MemoryMapFileDirectory = directoryPath;
-            MemoryMapFilePath = Path.Combine(MemoryMapFileDirectory, "info.json"); // TODO
+            MemoryMapFilePath = Path.Combine(MemoryMapFileDirectory, fileName);
         }
 
         private MemoryMappedFile GetMemoryMappedFile()
@@ -62,11 +62,11 @@ namespace MemoryMappedFileDemo.MemoryMappedUtils
             }
 
             var mutex = GetMutex();
-            var temp2 = Serialize(obj);
+            var data = Serialize(obj);
 
             using (var view = _memoryMappedFile.CreateViewAccessor())
             {
-                view.WriteArray(position: 0, array: temp2, offset: 0, count: temp2.Length);
+                view.WriteArray(position: 0, array: data, offset: 0, count: data.Length);
             }
 
             mutex.ReleaseMutex();
@@ -89,9 +89,7 @@ namespace MemoryMappedFileDemo.MemoryMappedUtils
 
                     mutex.ReleaseMutex();
                     
-                    var temp2 = Deserialize(result);
-
-                    return temp2;
+                    return Deserialize(result);
                 }
             }
         }
@@ -144,12 +142,7 @@ namespace MemoryMappedFileDemo.MemoryMappedUtils
             if (string.IsNullOrWhiteSpace(memoryMapName))
             {
                 throw new ArgumentNullException(nameof(memoryMapName));
-            }
-
-            if (memoryMapName.IndexOfAny(Path.GetInvalidPathChars()) > 0)
-            {
-                throw new ArgumentException($"{memoryMapName} contains invalid characters.");
-            }       
+            } 
         }
 
         public void Dispose()

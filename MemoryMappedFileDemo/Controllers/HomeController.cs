@@ -3,11 +3,8 @@ using MemoryMappedFileDemo.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Reflection;
 
 namespace MemoryMappedFileDemo.Controllers
 {
@@ -23,9 +20,16 @@ namespace MemoryMappedFileDemo.Controllers
             var dataFolder = Path.Combine(webHostEnvironment.WebRootPath, "data");
 
             _logger = logger;
-            _memoryMap = new MemoryMap<FileStatus>(memoryMapName: "demo", directoryPath: dataFolder);
+            _memoryMap = new MemoryMap<FileStatus>(memoryMapName: "demo", directoryPath: dataFolder, fileName: "info.json");
 
             _fileStatus = _memoryMap.ReadData();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+
+            _memoryMap?.Dispose();
         }
 
         public IActionResult Index()
@@ -48,7 +52,7 @@ namespace MemoryMappedFileDemo.Controllers
         [HttpPost]
         public IActionResult Index(FileStatusModel fileStatusModel)
         {
-            // Find What values were provided and map the updates to the static variable and write in Memory Mapped File as well
+            // Find What values were provided from UI and map the updates to the static variable and write in Memory Mapped File as well
 
             var properties = fileStatusModel.GetType().GetProperties();
             foreach(var property in properties)
